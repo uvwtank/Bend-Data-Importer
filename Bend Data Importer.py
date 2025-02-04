@@ -64,13 +64,12 @@ def parse_fixed_suprafile(file_path):
             "bends": []
         }
 
-
 def update_spreadsheet(spreadsheet_path, suprafiles_folder, save_path):
     workbook = load_workbook(spreadsheet_path, keep_vba=True)
     worksheet = workbook['PIECEMARKS']
 
     for file_name in os.listdir(suprafiles_folder):
-        if file_name.endswith(".$$$"):
+        if file_name.endswith(".$$$") and file_name.startswith("corrected_"):
             file_path = os.path.join(suprafiles_folder, file_name)
             parsed = parse_fixed_suprafile(file_path)
             clean_part_name = parsed["part_name"].lower().replace("+", "").strip()
@@ -83,7 +82,6 @@ def update_spreadsheet(spreadsheet_path, suprafiles_folder, save_path):
                     worksheet.cell(row=part_name_cell.row, column=14).value = total_bend_angle
 
     workbook.save(save_path)
-
 
 def main():
     Tk().withdraw()  # Hide the main Tkinter window
